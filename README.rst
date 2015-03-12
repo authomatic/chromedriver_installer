@@ -66,6 +66,14 @@ The same as before except you need to pass the install options wrapped in pip's
             --install-option="--chromedriver-version=2.10" \
             --install-option="--chromedriver-checksums=4fecc99b066cb1a346035bf022607104,058cd8b7b4b9688507701b5e648fd821"
 
+
+
+.. note::
+
+    If you encounter this error, run the install with the ``--egg`` option::
+
+        option --single-version-externally-managed not recognized
+
 Testing
 -------
 
