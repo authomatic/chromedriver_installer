@@ -62,17 +62,27 @@ The same as before except you need to pass the install options wrapped in pip's
 
 .. code-block:: bash
 
-        (e)$ pip install chromedriver_installer \
-            --install-option="--chromedriver-version=2.10" \
-            --install-option="--chromedriver-checksums=4fecc99b066cb1a346035bf022607104,058cd8b7b4b9688507701b5e648fd821"
+    (e)$ pip install chromedriver_installer \
+        --install-option="--chromedriver-version=2.10" \
+        --install-option="--chromedriver-checksums=4fecc99b066cb1a346035bf022607104,058cd8b7b4b9688507701b5e648fd821"
 
 
 
 .. note::
 
-    If you encounter this error, run the install with the ``--egg`` option::
+    If you encounter this error::
 
         option --single-version-externally-managed not recognized
+
+    ...run the install with the ``--egg`` option
+
+    .. code-block:: bash
+
+        (e)$ pip install chromedriver_installer \
+            --egg \
+            --install-option="--chromedriver-version=2.10" \
+            --install-option="--chromedriver-checksums=4fecc99b066cb1a346035bf022607104,058cd8b7b4b9688507701b5e648fd821"
+
 
 Testing
 -------
