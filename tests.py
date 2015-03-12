@@ -1,6 +1,7 @@
 import os
 import shlex
 import subprocess
+import tempfile
 
 import pytest
 
@@ -74,13 +75,26 @@ class TestFailure(Base):
 
 class VersionBase(Base):
 
-    def test_version(self, version_info):
+    def _assert_cached_files_exist(self, exists, remove=False):
+        path = os.path.join(tempfile.gettempdir(),
+                            'chromedriver_{0}.zip'.format(self.version))
+
+        if remove and os.path.exists(path):
+            os.remove(path)
+
+        assert os.path.exists(path) is exists
+
+    def _test_version(self, version_info, cached):
         self.version = version_info
         self.checksums = VERSIONS[version_info]
 
         # Chromedriver executable should not be available.
         self._not_available()
 
+        # Assert that zip archives are cached or not depending on test type.
+        self._assert_cached_files_exist(cached, remove=not cached)
+
+        # After installation...
         subprocess.check_call(shlex.split(self._get_install_command()))
 
         # ...the chromedriver executable should be available...
@@ -92,11 +106,19 @@ class VersionBase(Base):
         # ...and should be of the right version.
         assert self.version in str(expected_version)
 
+    def test_version_uncached(self, version_info):
+        self._test_version(version_info, cached=False)
+
+    def test_version_cached(self, version_info):
+        self._test_version(version_info, cached=True)
+
 
 class TestVersionOnly(VersionBase):
     def _get_install_command(self):
-        return INSTALL_COMMAND_BASE + \
-               '--install-option="--chromedriver-version={0}"'.format(self.version)
+        return (
+            INSTALL_COMMAND_BASE +
+            '--install-option="--chromedriver-version={0}"'.format(self.version)
+        )
 
 
 class TestVersionAndChecksums(VersionBase):

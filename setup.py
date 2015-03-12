@@ -204,4 +204,3 @@ setup(
     scripts=['if', 'empty', 'BuildScripts', 'will', 'be', 'ignored'],
     cmdclass=dict(build_scripts=BuildScripts, install=Install)
 )
-    
