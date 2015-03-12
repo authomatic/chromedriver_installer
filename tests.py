@@ -6,12 +6,12 @@ import tempfile
 import pytest
 
 
-VERSION = '2.13'
 PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
 VIRTUALENV_DIR = os.environ['VIRTUAL_ENV']
 INSTALL_COMMAND_BASE = 'pip install --egg {0} '.format(PROJECT_DIR)
 
 
+# The --version option is available since version 2.10
 VERSIONS = {
     '2.10': (
         '4fecc99b066cb1a346035bf022607104',
@@ -24,6 +24,24 @@ VERSIONS = {
         '7a7336caea140f6ac1cb8fae8df50d36',
         '447ebc91ac355fc11e960c95f2c15622',
         '44443738344b887ff1fe94710a8d45dc'
+    ),
+    '2.12': (
+        '6f4041e7f8300380cc2a13babbac354e',
+        'f306b93ff1b34af74371cee87d6560e4',
+        '259bb87f4ebf3b0bc4792ed203bd69f5',
+        '51eb47ad5ea91422aa1aaa400a724e7b'
+    ),
+    '2.13': (
+        '187dbe7973c82e59446d5bca7ed40acd',
+        'fcfd993330704f8cfb307a2fca5a9687',
+        'e37a65a1be68523385761d29decf15d4',
+        'ae85407694d3849450a25431f9669a81'
+    ),
+    '2.14': (
+        'f130cb3b94a8fbd28212f18c929f79ee',
+        '8368d266bd832ff2ea292baedbc770be',
+        '2b8a3e7249c80dec95264cbb55c897ed',
+        '00c70587c3e215f030307d546b315323'
     )
 }
 
