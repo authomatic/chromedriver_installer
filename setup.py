@@ -188,7 +188,7 @@ class Install(install):
 
 setup(
     name='chromedriver_installer',
-    version='0.0.2',
+    version='0.0.3',
     author='Peter Hudec',
     author_email='peterhudec@peterhudec.com',
     description='Chromedriver Installer',
