@@ -32,7 +32,7 @@ CROMEDRIVER_LATEST_VERSION_PATTERN = re.compile(
 
 # Global variables
 chromedriver_version = None
-chromedriver_checksums = None
+chromedriver_checksums = []
 
 
 def get_chromedriver_version():
@@ -145,6 +145,17 @@ class BuildScripts(build_scripts):
 
 class Install(install):
     """Used to get chromedriver version and checksums from install options"""
+
+    # Fix an error when pip calls setup.py with the
+    # --single-version-externally-managed and it is not supported due to
+    # old setuptools version.
+    _svem = filter(lambda x: x[0] == 'single-version-externally-managed',
+                   install.user_options)
+
+    if not _svem:
+        single_version_externally_managed = None
+        install.user_options.append(('single-version-externally-managed',
+                                     None, ""))
 
     user_options = install.user_options + [
         ('chromedriver-version=', None, 'Chromedriver version'),
