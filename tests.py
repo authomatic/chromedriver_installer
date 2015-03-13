@@ -109,7 +109,7 @@ class VersionBase(Base):
         # Chromedriver executable should not be available.
         self._not_available()
 
-        # Assert that zip archives are cached or not depending on test type.
+        # Assert that zip archives are cached or not, depending on test type.
         self._assert_cached_files_exist(cached, remove=not cached)
 
         # After installation...
@@ -127,9 +127,6 @@ class VersionBase(Base):
     def test_version_uncached(self, version_info):
         self._test_version(version_info, cached=False)
 
-    def test_version_cached(self, version_info):
-        self._test_version(version_info, cached=True)
-
 
 class TestVersionOnly(VersionBase):
     def _get_install_command(self):
@@ -145,3 +142,6 @@ class TestVersionAndChecksums(VersionBase):
             '--install-option="--chromedriver-version={0}" '
             '--install-option="--chromedriver-checksums={1}"'
         ).format(self.version, ','.join(self.checksums))
+
+    def test_version_cached(self, version_info):
+        self._test_version(version_info, cached=True)
