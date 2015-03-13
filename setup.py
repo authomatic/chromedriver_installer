@@ -32,7 +32,7 @@ CROMEDRIVER_LATEST_VERSION_PATTERN = re.compile(
 
 # Global variables
 chromedriver_version = None
-chromedriver_checksums = []
+chromedriver_checksums = None
 
 
 def get_chromedriver_version():
@@ -52,7 +52,7 @@ def get_chromedriver_version():
 class BuildScripts(build_scripts):
     """Downloads and unzips the requested chromedriver executable."""
 
-    def _download(self, zip_path):
+    def _download(self, zip_path, validate=False):
         plat = platform.platform().lower()
         architecture = 32
         if plat.startswith('darwin'):
@@ -90,6 +90,13 @@ class BuildScripts(build_scripts):
         if not download_ok:
             print('\t - download failed!')
 
+        if validate:
+            if not self._validate(zip_path):
+                raise Exception("The checksum of the downloaded file '{0}' "
+                                "matches none of the checksums {1}!"
+                                .format(zip_path,
+                                        ', '.join(chromedriver_checksums)))
+
     def _unzip(self, zip_path):
         zf = zipfile.ZipFile(zip_path)
         print("\t - extracting '{0}' to '{1}'.".format(zip_path, self.build_dir))
@@ -112,26 +119,21 @@ class BuildScripts(build_scripts):
 
         file_name = 'chromedriver_{0}.zip'.format(chromedriver_version)
         zip_path = os.path.join(tempfile.gettempdir(), file_name)
-        cached = os.path.exists(zip_path)
-        if os.path.exists(zip_path):
-            print("\t - requested file '{0}' found at '{1}'."
-                  .format(file_name, zip_path))
 
-        if not (validate and cached and self._validate(zip_path)):
-            if cached and not self._validate(zip_path):
-                print("\t - cached file '{0}' is not valid!".format(zip_path))
+        if validate:
+            if os.path.exists(zip_path):
+                print("\t - requested file '{0}' found at '{1}'."
+                      .format(file_name, zip_path))
 
-            self._download(zip_path)
-            if validate:
                 if self._validate(zip_path):
-                    print('\t - checksum OK')
+                    print("\t - cached file '{0}' is valid.".format(zip_path))
                 else:
-                    raise Exception("The checksum of the downloaded file '{0}' "
-                                    "matches none of the checksums {1}!"
-                                    .format(zip_path,
-                                            ', '.join(chromedriver_checksums)))
+                    print("\t - cached file '{0}' is not valid!".format(zip_path))
+                    self._download(zip_path, validate=True)
+            else:
+                self._download(zip_path, validate=True)
         else:
-            print("\t - cached file '{0}' is valid.".format(zip_path))
+            self._download(zip_path)
 
         self._unzip(zip_path)
         self.scripts = [os.path.join(self.build_dir, script) for script in
