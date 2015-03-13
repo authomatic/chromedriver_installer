@@ -1,5 +1,7 @@
 ChromeDriver Installer for Python
 =================================
+.. image:: https://travis-ci.org/peterhudec/chromedriver_installer.svg?branch=master
+    :target: https://travis-ci.org/peterhudec/chromedriver_installer
 
 Installs `ChromeDriver executable <https://sites.google.com/a/chromium.org/chromedriver/>`__
 with **pip** or **setup.py**.
