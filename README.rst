@@ -83,7 +83,7 @@ How it Works
 The **build_scripts** command of the **setup.py** script invoked by
 ``python setup.py install`` downloads, the **ChromeDriver** zip archive version
 specified in the ``--chromedriver-version`` option from
-`http://chromedriver.storage.googleapis.com/index.html?path={version}/`__
+http://chromedriver.storage.googleapis.com/index.html?path={version}/
 to the **temp** directory of the operating system.
 If the ``--chromedriver-checksums`` option is set, the archive is validated
 against the supplied checksums
