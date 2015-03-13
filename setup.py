@@ -41,7 +41,7 @@ def get_chromedriver_version():
 
     response = request.urlopen(CHROMEDRIVER_INFO_URL)
     content = response.read()
-    match = CROMEDRIVER_LATEST_VERSION_PATTERN.search(content)
+    match = CROMEDRIVER_LATEST_VERSION_PATTERN.search(str(content))
     if match:
         return match.group(1)
     else:
@@ -149,8 +149,8 @@ class Install(install):
     # Fix an error when pip calls setup.py with the
     # --single-version-externally-managed and it is not supported due to
     # old setuptools version.
-    _svem = filter(lambda x: x[0] == 'single-version-externally-managed',
-                   install.user_options)
+    _svem = list(filter(lambda x: x[0] == 'single-version-externally-managed',
+                        install.user_options))
 
     if not _svem:
         single_version_externally_managed = None
