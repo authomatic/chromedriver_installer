@@ -8,7 +8,7 @@ import pytest
 
 PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
 VIRTUALENV_DIR = os.environ['VIRTUAL_ENV']
-INSTALL_COMMAND_BASE = 'pip install --egg {0} '.format(PROJECT_DIR)
+INSTALL_COMMAND_BASE = 'pip install {0} '.format(PROJECT_DIR)
 
 
 # The --version option is available since version 2.10
