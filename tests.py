@@ -42,6 +42,47 @@ VERSIONS = {
         '8368d266bd832ff2ea292baedbc770be',
         '2b8a3e7249c80dec95264cbb55c897ed',
         '00c70587c3e215f030307d546b315323'
+    ),
+    '2.15': (
+        '844c200a4d8e79ad68d76ed68f67aadd',
+        '21c22803a1fd903ba15ea21ee81de317',
+        '3842a1ed3edc23997ca78bc980310024',
+        'c75b03bf76ab53d185fc18fc89ca1af9',
+    ),
+    '2.16': (
+        'fffdb4c098adc2ab61b0e0f5b694f27e',
+        'fa8e1bc6f9ce474582876653604d675e',
+        '3ae88facdc6ad1b716820cc5f678a6c4',
+        '3e1b4a91e12a9872a4ed83c9e61c122e',
+    ),
+    '2.17': (
+        '569364de37c2743597cd6b8bb333d21a',
+        'aa2b200f118f8eaa7ed1d6bd7ca49005',
+        'bfa2d4c80e701980b5fd656e85329806',
+    ),
+    '2.18': (
+        '0ac230f5f19c72cebf3042970217ad01',
+        '709e2dd132ac6c2a09de084fdc19db45',
+        '6839b10023a48d87c4835481b9fad7a7',
+        '4bdfb306e2bce6bf42e663617578ca24'
+    ),
+    '2.19': (
+        'b1e881182574cd2354c00c384d0949cc',
+        '9e476aa088baab9bed9c1a5e7007c9c3',
+        '425ed409f989f4ca9eb1f2a745039b59',
+        '4bc98ef466ef49e45fbee95a003e01b8'
+    ),
+    '2.20': (
+        '1e8cbdb84c5b70f86030297c4be3a5f9',
+        '245858cc984bd946df6a1e6719c8e6f5',
+        '749d4be0a317e92fd3aecaa022385439',
+        '028ee452b8e23890ec5ec6b0717fd295'
+    ),
+    '2.21': (
+        'd0a589f70e53774db95bf6f46972837c',
+        '06e57f4c411e1135c6277d17ea8390fd',
+        '452d8c9cba353ba366d15fbeba013943',
+        '8a93dc3ff02ef9bc3161dd4b20f87215'
     )
 }
 
@@ -88,7 +129,7 @@ class TestFailure(Base):
             stderr=subprocess.PIPE,
         ).communicate()[0]
 
-        assert 'failed with error code 1' in str(error_message)
+        assert 'matches none of the checksums foo, bar, baz!' in str(error_message)
 
 
 class VersionBase(Base):
