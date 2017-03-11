@@ -52,14 +52,16 @@ class BuildScripts(build_scripts):
 
     def _download(self, zip_path, validate=False):
         plat = platform.platform().lower()
-        architecture = 32
         if plat.startswith('darwin'):
             os_ = 'mac'
+            # Only 64 bit architecture is available for mac since version 2.23
+            architecture = 64 if float(chromedriver_version) >= 2.23 else 32
         elif plat.startswith('linux'):
             os_ = 'linux'
             architecture = platform.architecture()[0][:-3]
         elif plat.startswith('win'):
             os_ = 'win'
+            architecture = 32
         else:
             raise Exception('Unsupported platform: {0}'.format(plat))
 
