@@ -156,6 +156,28 @@ class Base(object):
             subprocess.check_call(shlex.split('chromedriver --version'))
 
 
+class TestNewest(Base):
+    def test_newest(self):
+        subprocess.check_call(shlex.split(INSTALL_COMMAND_BASE))
+        # subprocess.check_call(shlex.split('chromedriver --version'))
+
+        version_info = subprocess.Popen(
+            shlex.split('chromedriver --version'),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        ).communicate()[0]
+
+        latest_version = max(VERSIONS.keys())
+
+        assert latest_version in version_info, (
+            'There seems to be a new version of chromedriver installer '
+            'than {0}.\nDetected: "{1}"\n'
+            'You need to add this version to the tests.VERSIONS dictionary to '
+            'make this test pass.'
+            .format(latest_version, version_info.strip())
+        )
+
+
 class TestFailure(Base):
     def test_bad_checksum(self):
         self._not_available()

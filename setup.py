@@ -174,14 +174,12 @@ class Install(install):
     def run(self):
         global chromedriver_version, chromedriver_checksums
 
-        version_is_valid = CHROMEDRIVER_VERSION_PATTERN.\
-            match(self.chromedriver_version)
-
-        if self.chromedriver_version and not version_is_valid:
-            raise Exception('Invalid --chromedriver-version={0}! '
-                            'Must match /{1}/'
-                            .format(self.chromedriver_version,
-                                    CHROMEDRIVER_VERSION_PATTERN.pattern))
+        if self.chromedriver_version:
+            if not CHROMEDRIVER_VERSION_PATTERN.match(self.chromedriver_version):
+                raise Exception('Invalid --chromedriver-version={0}! '
+                                'Must match /{1}/'
+                                .format(self.chromedriver_version,
+                                        CHROMEDRIVER_VERSION_PATTERN.pattern))
 
         chromedriver_version = self.chromedriver_version
         chromedriver_checksums = self.chromedriver_checksums
@@ -194,7 +192,7 @@ class Install(install):
 
 setup(
     name='chromedriver_installer',
-    version='0.0.5',
+    version='0.0.6',
     author='Peter Hudec',
     author_email='peterhudec@peterhudec.com',
     description='Chromedriver Installer',
