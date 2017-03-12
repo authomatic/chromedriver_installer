@@ -99,7 +99,8 @@ class BuildScripts(build_scripts):
 
     def _unzip(self, zip_path):
         zf = zipfile.ZipFile(zip_path)
-        print("\t - extracting '{0}' to '{1}'.".format(zip_path, self.build_dir))
+        print("\t - extracting '{0}' to '{1}'."
+              .format(zip_path, self.build_dir))
         zf.extractall(self.build_dir)
 
     def _validate(self, zip_path):
@@ -128,7 +129,8 @@ class BuildScripts(build_scripts):
                 if self._validate(zip_path):
                     print("\t - cached file '{0}' is valid.".format(zip_path))
                 else:
-                    print("\t - cached file '{0}' is not valid!".format(zip_path))
+                    print("\t - cached file '{0}' is not valid!"
+                          .format(zip_path))
                     self._download(zip_path, validate=True)
             else:
                 self._download(zip_path, validate=True)
@@ -172,12 +174,14 @@ class Install(install):
     def run(self):
         global chromedriver_version, chromedriver_checksums
 
-        if self.chromedriver_version:
-            if not CHROMEDRIVER_VERSION_PATTERN.match(self.chromedriver_version):
-                 raise Exception('Invalid --chromedriver-version={0}! '
-                                 'Must match /{1}/'
-                                 .format(self.chromedriver_version,
-                                         CHROMEDRIVER_VERSION_PATTERN.pattern))
+        version_is_valid = CHROMEDRIVER_VERSION_PATTERN.\
+            match(self.chromedriver_version)
+
+        if self.chromedriver_version and not version_is_valid:
+            raise Exception('Invalid --chromedriver-version={0}! '
+                            'Must match /{1}/'
+                            .format(self.chromedriver_version,
+                                    CHROMEDRIVER_VERSION_PATTERN.pattern))
 
         chromedriver_version = self.chromedriver_version
         chromedriver_checksums = self.chromedriver_checksums
