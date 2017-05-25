@@ -4,7 +4,12 @@ import re
 import shlex
 import subprocess
 import tempfile
-import urllib2
+try:
+    # For Python 3.0 and later
+    from urllib.request import urlopen
+except ImportError:
+    # Fall back to Python 2's urllib2
+    from urllib2 import urlopen
 
 import pytest
 
@@ -14,18 +19,40 @@ VIRTUALENV_DIR = os.environ['VIRTUAL_ENV']
 INSTALL_COMMAND_BASE = 'pip install {0} '.format(PROJECT_DIR)
 
 
-def fetch_available_versions():
-    body = urllib2.urlopen('https://chromedriver.storage.googleapis.com').read()
-    versions = re.findall(r'<Key>(\d+\.\d{2}).*?<ETag>"(.*?)"</ETag>', body)
+def generate_version_fixture_params():
+    """
+    Loads all known versions of chromedriver from
+    `https://chromedriver.storage.googleapis.com`__
+    and returns a dictionary with keys ``params`` and ``ids`` which should be
+    unpacked as arguments to :func:`pytest.fixture` decorator.
 
-    return [
+    This way we can generate and ``params`` and ``ids`` arguments with a single
+    function call. We need the ``ids`` parameter for nice display of tested
+    versions in the verbose ``pytest`` output.
+
+    :returns:
+        A dictionary with keys ``params`` and ``ids``.
+    """
+    body = urlopen('https://chromedriver.storage.googleapis.com').read()
+    versions = re.findall(
+        r'<Key>(\d+\.\d{2}).*?<ETag>"(.*?)"</ETag>',
+        body.decode('utf-8'),
+    )
+
+    params = [
         (version, [checksum for _, checksum in checksums])
         for version, checksums in itertools.groupby(versions, lambda x: x[0])
     ]
 
+    return dict(
+        params=params,
+        ids=[version for version, _ in params]
+    )
 
-@pytest.fixture(params=fetch_available_versions())
-def version_info(request):
+
+@pytest.fixture(**generate_version_fixture_params())
+def version(request):
+    request.param_index = request.param[0]
     return request.param
 
 
@@ -83,8 +110,8 @@ class VersionBase(Base):
 
         assert os.path.exists(path) is exists
 
-    def _test_version(self, version_info, cached):
-        self.version, self.checksums = version_info
+    def _test_version(self, version, cached):
+        self.version, self.checksums = version
 
         # Chromedriver executable should not be available.
         self._not_available()
@@ -104,8 +131,8 @@ class VersionBase(Base):
         # ...and should be of the right version.
         assert self.version in str(expected_version)
 
-    def test_version_uncached(self, version_info):
-        self._test_version(version_info, cached=False)
+    def test_version_uncached(self, version):
+        self._test_version(version, cached=False)
 
 
 class TestVersionOnly(VersionBase):
@@ -123,5 +150,5 @@ class TestVersionAndChecksums(VersionBase):
             '--install-option="--chromedriver-checksums={1}"'
         ).format(self.version, ','.join(self.checksums))
 
-    def test_version_cached(self, version_info):
-        self._test_version(version_info, cached=True)
+    def test_version_cached(self, version):
+        self._test_version(version, cached=True)
