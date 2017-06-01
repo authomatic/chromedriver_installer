@@ -2,6 +2,7 @@ language: python
 install:
   - pip install tox
 script:
-  - sudo apt-get -y dist-upgrade
-  - sudo apt-get -y install libstdc++6
+  - export DEBIAN_FRONTEND=noninteractive
+  - sudo apt-get -yq dist-upgrade
+  - sudo apt-get -yq install libstdc++6
   - tox
