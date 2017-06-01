@@ -123,10 +123,14 @@ class VersionBase(Base):
         subprocess.check_call(shlex.split(self._get_install_command()))
 
         # ...the chromedriver executable should be available...
-        expected_version = subprocess.Popen(
+        expected_version, error = subprocess.Popen(
             shlex.split('chromedriver -v'),
             stdout=subprocess.PIPE
-        ).communicate()[0]
+        ).communicate()
+
+        print('@' * 100)
+        print(error)
+        print('#' * 100)
 
         # ...and should be of the right version.
         assert self.version in str(expected_version)
