@@ -2,6 +2,8 @@ language: python
 install:
   - pip install tox
 script:
-  - echo "chromedriver available?: `which chromedriver`"
-  - echo "chromedriver version: `chromedriver -v`"
+  - echo '==================================='
+  - which chromedriver
+  - chromedriver -v
+  - echo '-----------------------------------'
   - tox
