@@ -128,10 +128,6 @@ class VersionBase(Base):
             stdout=subprocess.PIPE
         ).communicate()
 
-        print('@' * 100)
-        print(error)
-        print('#' * 100)
-
         # ...and should be of the right version.
         assert self.version in str(expected_version)
 
